@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'rol',
+
     ];
 
     /**
@@ -48,9 +50,17 @@ class User extends Authenticatable
 
     public function events()
     {
-        return $this->belongsToMany(Event::class);
+        return $this->belongsTo(Event::class);
     }
 
+    public function eventsAsGuest()
+    {
+        return $this->belongsToMany(Event::class, 'event_user');
+    }
+
+    public function invitations()
+    {
+        return $this->hasMany(Invitation::class);
+    }
     
-  
 }

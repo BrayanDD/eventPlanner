@@ -6,12 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Invitation extends Model
 {
+    protected $fillable = [
+        'state_id',
+        'event_id',
+        'user_id',
+
+    ];
     public function events()
     {
         return $this->belongsTo(Event::class); 
     }
-    public function states()
+    public function state()
     {
         return $this->belongsTo(State::class); 
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class); 
+    }
+    
 }

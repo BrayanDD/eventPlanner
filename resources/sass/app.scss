@@ -6,3 +6,21 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+
+li.nav-item {
+    margin-left: 1em;
+}
+
+.events{
+    margin: auto;
+    width: 80%;
+}
+.truncate {
+    display: -webkit-box; 
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+  }
+  
