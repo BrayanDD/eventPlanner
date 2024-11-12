@@ -16,17 +16,16 @@ class Event extends Model
 
     ];
 
-    public function guests()
-    {
-        return $this->belongsToMany(User::class, 'event_user');
-    }
-
-
     public function invitations()
     {
         return $this->hasMany(Invitation::class);
     }
-
+    
+    public function guests()
+    {
+        return $this->hasManyThrough(User::class, Invitation::class, 'event_id', 'id', 'id', 'user_id');
+    }
+    
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -3,35 +3,67 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invitation;
+use App\Models\State;
 use Illuminate\Http\Request;
 
 class InvitationController extends Controller
 {
+    public function index()
+    {
+
+        $invitations = Invitation::where('user_id',auth()->id())->where('state_id',State::PENDING)->with('user', 'event')->paginate(20);
+       
+       
+        
+        return view('invitations.index', compact('invitations'));
+    }
     public function store(Request $request)
     {
-        // Validar los datos
+     
+       $this->authorize('create',Invitation::class);
+
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_ids' => 'required|array',
+            'user_id.*' => 'exists:users,id', 
             'event_id' => 'required|exists:events,id',
         ]);
     
-        // Verificar si el usuario ya ha sido invitado
-        $existingInvitation = Invitation::where('user_id', $request->user_id)
-                                         ->where('event_id', $request->event_id)
-                                         ->first();
+        $event_id = $request->event_id;
     
-        if ($existingInvitation) {
-            return response()->json(['success' => false, 'message' => 'El usuario ya ha sido invitado.']);
+        foreach ($request->user_ids as $user_id) {
+           
+            $existingInvitation = Invitation::where('user_id', $user_id)
+                                            ->where('event_id', $event_id)
+                                            ->first();
+    
+            if (!$existingInvitation) {
+           
+                Invitation::create([
+                    'user_id' => $user_id,
+                    'event_id' => $event_id,
+                    'state_id' => 1,
+                ]);
+            }
         }
     
-        // Crear la invitación
-        Invitation::create([
-            'user_id' => $request->user_id,
-            'event_id' => $request->event_id,
-            'state_id' => 1, 
-        ]);
+        return back()->with(['success' => true, 'message' => 'Invitaciones enviadas correctamente.']);
+    }
     
-        return response()->json(['success' => true]);
+    public function update(Request $request, Invitation $invitation)
+    {
+        $this->authorize('update',$invitation);
+
+        $request->validate([
+            'state_id' => 'required',
+        ]);
+
+
+        $invitation->update([
+            'state_id' => $request->state_id,
+          
+        ]);
+
+        return redirect()->route('invitations.index');
     }
     
 }

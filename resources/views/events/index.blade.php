@@ -1,7 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-<a href="{{ route('events.create') }}"><button class="btn btn-primary">+Crear</button></a>
+@auth
+  @php
+    $user = auth()->user();
+  @endphp
+  @if ($user->rol === 'admin' || $user->rol === 'organizador')
+    <a href="{{ route('events.create') }}">
+      <button class="btn btn-primary">+ Crear</button>
+    </a>
+  @endif
+@endauth
   <div class="events d-flex flex-wrap justify-content-center">
     @foreach ($events as $event)
       <div class="card m-2" style="max-width: 18rem;">

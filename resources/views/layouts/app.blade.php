@@ -36,7 +36,7 @@
           <!-- Left Side Of Navbar -->
           <ul class="navbar-nav me-auto">
             <a href="{{ route('events.index') }}"><li class="nav-item">Eventos</li></a>
-            <li class="nav-item">Invitaciones</li>
+            <a href="{{ route('invitations.index') }}"><li class="nav-item">Invitaciones</li></a>
             
           </ul>
 
