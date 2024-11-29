@@ -56,34 +56,38 @@ class EventController extends Controller
     public function show(Event $event)
     {
         $this->authorize('view', $event);
-       
+
        // listar a los usuarios disponibles para invitar
         $users = User::where('rol', 'asistente')->whereDoesntHave('invitations', function ($query) use ($event) {
             $query->where('event_id', $event->id);
         })->paginate(20);
-        
+
         $invitations = $event->invitations()->with('user', 'state')->paginate(20);
         $totalCount = $invitations->count();
-    
-        
+
+
         $acceptedCount = $event->invitations()->whereHas('state', function($query) {
             $query->where('name', 'aceptado');
         })->count();
-    
-        
+
+        $rejectedCount = $event->invitations()->whereHas('state', function($query) {
+            $query->where('name', 'rechazado');
+        })->count();
+
+
         $pendingCount = $event->invitations()->whereHas('state', function($query) {
             $query->where('name', 'pendiente');
         })->count();
-    
-        return view('events.show', compact('event', 'invitations', 'acceptedCount', 'pendingCount', 'totalCount','users'));
+
+        return view('events.show', compact('event', 'invitations', 'acceptedCount', 'pendingCount', 'totalCount','users','rejectedCount'));
     }
-    
+
 
 
     public function edit(Event $event)
     {
         $this->authorize('create', $event);
-        
+
         return view('events.edit', compact('event'));
     }
 

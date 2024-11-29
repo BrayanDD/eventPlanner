@@ -17,10 +17,20 @@ li.nav-item {
     width: 80%;
 }
 .truncate {
-    display: -webkit-box; 
+    display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5; 
-    overflow: hidden; 
+    -webkit-line-clamp: 5;
+    overflow: hidden;
     text-overflow: ellipsis;
   }
-  
+
+.container-event{
+    width: 100%;
+}
+.container-info{
+    width: 65%;
+}
+.container-soli{
+    width: 45%;
+    float: right;
+}
